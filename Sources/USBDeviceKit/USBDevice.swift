@@ -32,7 +32,9 @@ public let kIOCFPlugInInterfaceID = CFUUIDGetConstantUUIDWithBytes(nil,
  */
 
 public func USBmakebmRequestType(direction: Int, type: Int, recipient: Int) -> UInt8 {
-    return UInt8((direction & kUSBRqDirnMask) << kUSBRqDirnShift)|UInt8((type & kUSBRqTypeMask) << kUSBRqTypeShift)|UInt8(recipient & kUSBRqRecipientMask)
+    return UInt8((direction & kUSBRqDirnMask) << kUSBRqDirnShift) |
+           UInt8((type & kUSBRqTypeMask) << kUSBRqTypeShift) |
+           UInt8(recipient & kUSBRqRecipientMask)
 }
 
 public extension Notification.Name {

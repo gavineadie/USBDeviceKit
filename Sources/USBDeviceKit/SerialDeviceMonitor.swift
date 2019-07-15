@@ -20,7 +20,11 @@ open class SerialDeviceMonitor {
     public init() { }
     
     private func getParentProperty(device: io_object_t, key: String) -> AnyObject? {
-        return IORegistryEntrySearchCFProperty(device, kIOServicePlane, key as CFString, kCFAllocatorDefault, IOOptionBits(kIORegistryIterateRecursively | kIORegistryIterateParents))
+        return IORegistryEntrySearchCFProperty(device, kIOServicePlane,
+                                               key as CFString,
+                                               kCFAllocatorDefault,
+                                               IOOptionBits(kIORegistryIterateRecursively |
+                                                            kIORegistryIterateParents))
     }
     
     func getDeviceProperty(device: io_object_t, key: String) -> AnyObject? {
@@ -33,7 +37,8 @@ open class SerialDeviceMonitor {
     func getSerialDevices(iterator: io_iterator_t) {
         var newSerialDevices: [SerialDevice] = []
         while case let serialPort = IOIteratorNext(iterator), serialPort != 0 {
-            guard let calloutDevice = getDeviceProperty(device: serialPort, key: kIOCalloutDeviceKey) as? String else { continue }
+            guard let calloutDevice = getDeviceProperty(device: serialPort,
+                                                        key: kIOCalloutDeviceKey) as? String else { continue }
             
             var sd = SerialDevice(path: calloutDevice)
             sd.name = getParentProperty(device: serialPort, key: "USB Product Name") as? String
@@ -53,8 +58,6 @@ open class SerialDeviceMonitor {
         
         let oldSet = Set(serialDevices)
         let newSet = Set(newSerialDevices)
-        
-        
         
         for sd in oldSet.subtracting(newSet) {
             NotificationCenter.default.post(name: .SerialDeviceRemoved, object: ["device": sd])
