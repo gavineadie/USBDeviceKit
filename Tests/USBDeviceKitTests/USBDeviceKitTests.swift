@@ -6,7 +6,7 @@ final class USBDeviceKitTests: XCTestCase {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct
         // results.
-        XCTAssertEqual(USBDeviceKit().text, "Hello, World!")
+        XCTAssertEqual(1.0, 1.0)
     }
 
     static var allTests = [

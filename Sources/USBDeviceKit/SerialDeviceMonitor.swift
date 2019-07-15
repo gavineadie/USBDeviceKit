@@ -13,18 +13,17 @@ import IOKit.serial
 
 
 open class SerialDeviceMonitor {
-    var serialDevices:[SerialDevice] = []
-    var portUsageIntervalTime:Float = 0.25
-    open var filterDevices:((_ devices:[SerialDevice])->[SerialDevice])?
+    var serialDevices: [SerialDevice] = []
+    var portUsageIntervalTime: Float = 0.25
+    open var filterDevices: ((_ devices:[SerialDevice])->[SerialDevice])?
     
-    public init() {
-    }
+    public init() { }
     
-    private func getParentProperty(device:io_object_t, key:String) -> AnyObject? {
+    private func getParentProperty(device: io_object_t, key: String) -> AnyObject? {
         return IORegistryEntrySearchCFProperty(device, kIOServicePlane, key as CFString, kCFAllocatorDefault, IOOptionBits(kIORegistryIterateRecursively | kIORegistryIterateParents))
     }
     
-    func getDeviceProperty(device:io_object_t, key:String) -> AnyObject? {
+    func getDeviceProperty(device: io_object_t, key: String) -> AnyObject? {
         let cfKey = key as CFString
         let propValue = IORegistryEntryCreateCFProperty(device, cfKey, kCFAllocatorDefault, 0)
         
@@ -32,11 +31,9 @@ open class SerialDeviceMonitor {
     }
     
     func getSerialDevices(iterator: io_iterator_t) {
-        var newSerialDevices:[SerialDevice] = []
+        var newSerialDevices: [SerialDevice] = []
         while case let serialPort = IOIteratorNext(iterator), serialPort != 0 {
-            guard let calloutDevice = getDeviceProperty(device: serialPort, key: kIOCalloutDeviceKey) as? String else {
-                continue
-            }
+            guard let calloutDevice = getDeviceProperty(device: serialPort, key: kIOCalloutDeviceKey) as? String else { continue }
             
             var sd = SerialDevice(path: calloutDevice)
             sd.name = getParentProperty(device: serialPort, key: "USB Product Name") as? String

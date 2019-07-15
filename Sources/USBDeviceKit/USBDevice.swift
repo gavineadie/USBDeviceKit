@@ -27,10 +27,11 @@ public let kIOCFPlugInInterfaceID = CFUUIDGetConstantUUIDWithBytes(nil,
 
 /*!
  @defined USBmakebmRequestType
- @discussion Macro to encode the bRequest field of a Device Request.  It is used when constructing an IOUSBDevRequest.
+ @discussion Macro to encode the bRequest field of a Device Request.
+    It is used when constructing an IOUSBDevRequest.
  */
 
-public func USBmakebmRequestType(direction:Int, type:Int, recipient:Int) -> UInt8 {
+public func USBmakebmRequestType(direction: Int, type: Int, recipient: Int) -> UInt8 {
     return UInt8((direction & kUSBRqDirnMask) << kUSBRqDirnShift)|UInt8((type & kUSBRqTypeMask) << kUSBRqTypeShift)|UInt8(recipient & kUSBRqRecipientMask)
 }
 
@@ -40,30 +41,30 @@ public extension Notification.Name {
 }
 
 public struct USBMonitorData {
-    public let vendorId:UInt16
-    public let productId:UInt16
+    public let vendorId: UInt16
+    public let productId: UInt16
     
-    public init (vendorId:UInt16, productId:UInt16) {
+    public init (vendorId: UInt16, productId: UInt16) {
         self.vendorId = vendorId
         self.productId = productId
     }
 }
 
 public struct USBDevice {
-    public let id:UInt64
-    public let vendorId:UInt16
-    public let productId:UInt16
-    public let name:String
+    public let id: UInt64
+    public let vendorId: UInt16
+    public let productId: UInt16
+    public let name: String
     
-    public let deviceInterfacePtrPtr:UnsafeMutablePointer<UnsafeMutablePointer<IOUSBDeviceInterface>?>?
-    public let plugInInterfacePtrPtr:UnsafeMutablePointer<UnsafeMutablePointer<IOCFPlugInInterface>?>?
+    public let deviceInterfacePtrPtr: UnsafeMutablePointer<UnsafeMutablePointer<IOUSBDeviceInterface>?>?
+    public let plugInInterfacePtrPtr: UnsafeMutablePointer<UnsafeMutablePointer<IOCFPlugInInterface>?>?
     
-    public init(id:UInt64,
-                vendorId:UInt16,
-                productId:UInt16,
-                name:String,
-                deviceInterfacePtrPtr:UnsafeMutablePointer<UnsafeMutablePointer<IOUSBDeviceInterface>?>?,
-                plugInInterfacePtrPtr:UnsafeMutablePointer<UnsafeMutablePointer<IOCFPlugInInterface>?>?) {
+    public init(id: UInt64,
+                vendorId: UInt16,
+                productId: UInt16,
+                name: String,
+                deviceInterfacePtrPtr: UnsafeMutablePointer<UnsafeMutablePointer<IOUSBDeviceInterface>?>?,
+                plugInInterfacePtrPtr: UnsafeMutablePointer<UnsafeMutablePointer<IOCFPlugInInterface>?>?) {
         self.id = id
         self.vendorId = vendorId
         self.productId = productId

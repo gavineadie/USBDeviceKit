@@ -10,24 +10,24 @@ import Cocoa
 
 
 open class USBDeviceMonitor {
-    public let vp:[USBMonitorData]
+    public let vp: [USBMonitorData]
 
-    public init(_ vp:[USBMonitorData]) {
+    public init(_ vp: [USBMonitorData]) {
         self.vp = vp
     }
         
     @objc open func start() {
         for vp in self.vp {
-            var matchedIterator:io_iterator_t = 0
-            var removalIterator:io_iterator_t = 0
-            let notifyPort:IONotificationPortRef = IONotificationPortCreate(kIOMasterPortDefault)
+            var matchedIterator: io_iterator_t = 0
+            var removalIterator: io_iterator_t = 0
+            let notifyPort: IONotificationPortRef = IONotificationPortCreate(kIOMasterPortDefault)
             IONotificationPortSetDispatchQueue(notifyPort, DispatchQueue(label: "IODetector"))
             let matchingDict = IOServiceMatching(kIOUSBDeviceClassName)
                 as NSMutableDictionary
             matchingDict[kUSBVendorID] = NSNumber(value: vp.vendorId)
             matchingDict[kUSBProductID] = NSNumber(value: vp.productId)
 
-            let matchingCallback:IOServiceMatchingCallback = { (userData, iterator) in
+            let matchingCallback: IOServiceMatchingCallback = { (userData, iterator) in
                 // Convert self to a void pointer, store that in the context, and convert it
                 let this = Unmanaged<USBDeviceMonitor>.fromOpaque(userData!).takeUnretainedValue()
                 this.rawDeviceAdded(iterator: iterator)
@@ -55,11 +55,11 @@ open class USBDeviceMonitor {
     open func rawDeviceAdded(iterator: io_iterator_t) {
         
         while case let usbDevice = IOIteratorNext(iterator), usbDevice != 0 {
-            var score:Int32 = 0
-            var kr:Int32 = 0
-            var did:UInt64 = 0
-            var vid:UInt16 = 0
-            var pid:UInt16 = 0
+            var score: Int32 = 0
+            var kr: Int32 = 0
+            var did: UInt64 = 0
+            var vid: UInt16 = 0
+            var pid: UInt16 = 0
 
             var deviceInterfacePtrPtr: UnsafeMutablePointer<UnsafeMutablePointer<IOUSBDeviceInterface>?>?
             var plugInInterfacePtrPtr: UnsafeMutablePointer<UnsafeMutablePointer<IOCFPlugInInterface>?>?
@@ -73,7 +73,7 @@ open class USBDeviceMonitor {
             // io_name_t imports to swift as a tuple (Int8, ..., Int8) 128 ints
             // although in device_types.h it's defined:
             // typedef	char io_name_t[128];
-            var deviceNameCString:[CChar] = [CChar](repeating: 0, count: 128)
+            var deviceNameCString: [CChar] = [CChar](repeating: 0, count: 128)
             kr = IORegistryEntryGetName(usbDevice, &deviceNameCString)
             
             if(kr != kIOReturnSuccess) {
